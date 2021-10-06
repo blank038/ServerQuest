@@ -1,1 +1,12 @@
-pro
+name: ServerQuest
+main: com.blank038.serverquest.ServerQuest
+depend:
+  - PokemonAPI
+softdepend:
+  - PlaceholderAPI
+version: ${version}
+commands:
+  serverquest:
+    aliases:
+      - sq
+    description: Command for ServerQuest.

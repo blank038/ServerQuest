@@ -1,0 +1,25 @@
+# 界面标题
+title: "&8全服活跃度"
+# 界面大小
+size: 45
+# 任务编号
+quest_key: example
+# 界面物品
+items:
+  fg:
+    type: STAINED_GLASS_PANE
+    amount: 1
+    data: 15
+    name: "&f"
+    lore: [ ]
+    slot: 0-8,36-44
+  reward_1:
+    type: CHEST
+    amount: 1
+    data: 0
+    name: "&a全服在线 1000 分钟"
+    lore:
+      - " "
+      - "&e 点击领取奖励 "
+    progress: 1000
+    slot: 22

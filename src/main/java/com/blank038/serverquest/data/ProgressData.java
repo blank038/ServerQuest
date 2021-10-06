@@ -13,8 +13,14 @@ import java.util.List;
  * @since 2021-10-04
  */
 public class ProgressData {
+    public static final HashMap<String, ProgressData> PROGRESS_MAP = new HashMap<>();
+
     private final HashMap<String, Integer> DEVOTE_MAP = new HashMap<>();
     private int now;
+
+    public ProgressData(int count) {
+        this.now = count;
+    }
 
     public ProgressData(ConfigurationSection section) {
         this.now = section.getInt("now");

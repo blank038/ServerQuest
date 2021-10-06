@@ -2,22 +2,38 @@ package com.blank038.serverquest.data;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author Blank038
  * @since 2021-10-04
  */
 public class QuestData {
-    private final HashMap<Integer, List<String>> REWARDS = new HashMap<>();
+    public static final HashMap<String, QuestData> QUEST_MAP = new HashMap<>();
 
-    public QuestData(ConfigurationSection section) {
-        section.getKeys(false).forEach((key) -> this.REWARDS.put(Integer.parseInt(key), section.getStringList(key)));
+    private final String QUEST_TYPE, SOURCE_KEY;
+    private final HashMap<Integer, RewardData> REWARDS = new HashMap<>();
+
+    public QuestData(String sourceKey, ConfigurationSection section) {
+        this.QUEST_TYPE = section.getString("type");
+        this.SOURCE_KEY = sourceKey;
+        section.getConfigurationSection("rewards.").getKeys(false).forEach((key) -> this.REWARDS.put(Integer.parseInt(key),
+                new RewardData(section.getConfigurationSection("rewards." + key))));
     }
 
-    public List<String> getRewards(int count) {
-        return this.REWARDS.getOrDefault(count, new ArrayList<>());
+    public RewardData getReward(int count) {
+        return this.REWARDS.getOrDefault(count, null);
+    }
+
+    public String getType() {
+        return this.QUEST_TYPE;
+    }
+
+    public String getKey() {
+        return this.SOURCE_KEY;
+    }
+
+    public boolean containsReward(int progress) {
+        return this.REWARDS.containsKey(progress);
     }
 }

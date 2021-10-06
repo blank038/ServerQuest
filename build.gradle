@@ -1,18 +1,23 @@
 buildscript {
     repositories {
+        maven {
+            url = "https://crystal.app.lss233.com/repositories/minecraft"
+        }
         jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 
-version = "1.0"
-group = "com.mc9y.playerinfo"
-archivesBaseName = "PlayerInfo"
+version = "1.0.1-SNAPSHOT"
+group = "com.blank038.serverquest"
+archivesBaseName = "ServerQuest"
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
@@ -20,24 +25,21 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2807"
-    runDir = "run"
-
-    mappings = "snapshot_20171003"
+    mappings channel: 'snapshot', version: '20171003-1.12'
 }
 
 dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
         include 'plugin.yml'
 
-        expand 'version':project.version, 'name':project.name
+        expand 'version': project.version, 'name': project.name
     }
 
     from(sourceSets.main.resources.srcDirs) {
