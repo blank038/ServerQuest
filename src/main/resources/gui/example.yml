@@ -19,6 +19,7 @@ items:
     data: 0
     name: "&a全服在线 1000 分钟"
     lore:
+      - "&8当前 &7%now%/1000"
       - " "
       - "&e 点击领取奖励 "
     progress: 1000

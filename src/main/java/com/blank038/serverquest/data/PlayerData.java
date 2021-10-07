@@ -46,5 +46,10 @@ public class PlayerData {
         File file = new File(ServerQuest.getInstance().getDataFolder() + "/data/", this.PLAYER_NAME + ".yml");
         FileConfiguration data = YamlConfiguration.loadConfiguration(file);
         data.set("rewards", this.REWARDS);
+        try {
+            data.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

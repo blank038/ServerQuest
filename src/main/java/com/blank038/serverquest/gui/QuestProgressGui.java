@@ -4,17 +4,23 @@ import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.data.PlayerData;
 import com.blank038.serverquest.data.ProgressData;
 import com.blank038.serverquest.data.QuestData;
+import com.blank038.serverquest.util.CommonUtil;
 import com.mc9y.blank038api.util.inventory.GuiModel;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Blank038
@@ -35,14 +41,43 @@ public class QuestProgressGui {
         }
         FileConfiguration data = YamlConfiguration.loadConfiguration(file);
         String questKey = data.getString("quest_key");
-        if (!QuestData.QUEST_MAP.containsKey(questKey)) {
+        if (!QuestData.QUEST_MAP.containsKey(questKey) || !ProgressData.PROGRESS_MAP.containsKey(questKey)) {
             player.sendMessage(ServerQuest.getString("message.progress_n_exists", true));
             return;
         }
+        ProgressData temProgress = ProgressData.PROGRESS_MAP.get(questKey);
         // 创建 GuiModel 面板
         GuiModel model = new GuiModel(data.getString("title"), data.getInt("size"));
         model.registerListener(ServerQuest.getInstance());
         model.setCloseRemove(true);
+        if (data.contains("items")) {
+            for (String key : data.getConfigurationSection("items").getKeys(false)) {
+                ConfigurationSection section = data.getConfigurationSection("items." + key);
+                ItemStack itemStack = new ItemStack(Material.valueOf(section.getString("type")),
+                        section.getInt("amount"), (short) section.getInt("data"));
+                ItemMeta meta = itemStack.getItemMeta();
+                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', section.getString("name")));
+                List<String> lore = new ArrayList<>();
+                for (String line : section.getStringList("lore")) {
+                    lore.add(ChatColor.translateAlternateColorCodes('&', line)
+                            .replace("%now%", String.valueOf(Math.min(temProgress.getNow(), section.getInt("progress")))));
+                }
+                lore.replaceAll((s) -> ChatColor.translateAlternateColorCodes('&', s));
+                meta.setLore(lore);
+                itemStack.setItemMeta(meta);
+                if (section.contains("progress")) {
+                    net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
+                    NBTTagCompound nbtTagCompound = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
+                    assert nbtTagCompound != null;
+                    nbtTagCompound.setInt("ProgressReward", section.getInt("progress"));
+                    nmsItem.setTag(nbtTagCompound);
+                    itemStack = CraftItemStack.asBukkitCopy(nmsItem);
+                }
+                for (int i : CommonUtil.formatSlots(section.getString("slot"))) {
+                    model.setItem(i, itemStack);
+                }
+            }
+        }
         model.execute((e) -> {
             e.setCancelled(true);
             if (e.getClickedInventory() == e.getInventory()) {
@@ -62,7 +97,7 @@ public class QuestProgressGui {
                     }
                     ProgressData progressData = ProgressData.PROGRESS_MAP.get(questKey);
                     if (progressData.getNow() < progress) {
-                        clicker.sendMessage(ServerQuest.getString("message.", true));
+                        clicker.sendMessage(ServerQuest.getString("message.progress_n_reach", true));
                         return;
                     }
                     PlayerData tempData = PlayerData.DATA_MAP.get(clicker.getName());

@@ -18,12 +18,15 @@ public class ServerQuestApi {
      * @param count  任务进度
      */
     public static void submitQuest(Player player, String type, int count) {
+        if (player == null) {
+            return;
+        }
         QuestData.QUEST_MAP.forEach((k, v) -> {
             if (type.equals(v.getType())) {
                 if (ProgressData.PROGRESS_MAP.containsKey(k)) {
                     ProgressData.PROGRESS_MAP.get(k).add(player, count);
                 } else {
-                    ProgressData data = new ProgressData(0);
+                    ProgressData data = new ProgressData(k, 0);
                     data.add(player, count);
                     ProgressData.PROGRESS_MAP.put(k, data);
                 }
@@ -41,6 +44,6 @@ public class ServerQuestApi {
         if (ProgressData.PROGRESS_MAP.containsKey(questId)) {
             return;
         }
-        ProgressData.PROGRESS_MAP.put(questId, new ProgressData(progress));
+        ProgressData.PROGRESS_MAP.put(questId, new ProgressData(questId, progress));
     }
 }

@@ -18,12 +18,19 @@ public class PlaceholderBridge extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player p, String params) {
-        if (params.startsWith("progress_")) {
+        if (params.contains("_")) {
             String[] split = params.split("_");
-            if (ProgressData.PROGRESS_MAP.containsKey(split[1])) {
-                return String.valueOf(ProgressData.PROGRESS_MAP.get(split[1]).getNow());
+            if (split[0].equals("progress")) {
+                if (ProgressData.PROGRESS_MAP.containsKey(split[1])) {
+                    return String.valueOf(ProgressData.PROGRESS_MAP.get(split[1]).getNow());
+                }
+                return "0";
+            } else if (split[0].equals("player")) {
+                if (ProgressData.PROGRESS_MAP.containsKey(split[1])) {
+                    return String.valueOf(ProgressData.PROGRESS_MAP.get(split[1]).getPlayerProgress(p.getName()));
+                }
+                return "0";
             }
-            return "error";
         }
         return "";
     }

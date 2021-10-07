@@ -1,9 +1,17 @@
 # 提示文本
 message:
   prefix: "&a任务 &f"
+  help:
+    default:
+      - "&3全服任务"
+      - "&6/%c open <任务> &8查看任务进度奖励"
+    admin:
+      - "&3全服任务"
+      - "&6/%c open <任务> &8查看任务进度奖励"
+      - "&6/%c reload &8重载插件配置文件"
   wrong_data: "数据还未加载, 请等待数据加载完成."
   wrong_progress_key: "请输入进度编号."
-  progresss_n_exists: "进度奖励不存在, 请联系服主检查配置."
+  progress_n_exists: "进度奖励不存在, 请联系服主检查配置."
   progress_n_reach: "进度还没达标, 无法领取该奖励."
   gotten: "成功该进度领取奖励."
   received: "你已领取过该进度奖励."
