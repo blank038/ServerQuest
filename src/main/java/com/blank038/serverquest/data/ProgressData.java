@@ -1,7 +1,6 @@
 package com.blank038.serverquest.data;
 
 import com.blank038.serverquest.ServerQuest;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -60,7 +59,7 @@ public class ProgressData {
         FileConfiguration section = new YamlConfiguration();
         section.set("now", this.now);
         List<String> list = new ArrayList<>();
-        this.DEVOTE_MAP.forEach((key, value) -> list.add(key + "//" + value));
+        new HashMap<>(this.DEVOTE_MAP).forEach((key, value) -> list.add(key + "//" + value));
         section.set("devote_list", list);
         try {
             section.save(file);

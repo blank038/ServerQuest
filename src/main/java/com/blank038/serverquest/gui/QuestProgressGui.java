@@ -5,6 +5,7 @@ import com.blank038.serverquest.data.PlayerData;
 import com.blank038.serverquest.data.ProgressData;
 import com.blank038.serverquest.data.QuestData;
 import com.blank038.serverquest.util.CommonUtil;
+import com.blank038.serverquest.util.ScriptUtil;
 import com.mc9y.blank038api.util.inventory.GuiModel;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
@@ -60,7 +61,8 @@ public class QuestProgressGui {
                 List<String> lore = new ArrayList<>();
                 for (String line : section.getStringList("lore")) {
                     lore.add(ChatColor.translateAlternateColorCodes('&', line)
-                            .replace("%now%", String.valueOf(Math.min(temProgress.getNow(), section.getInt("progress")))));
+                            .replace("%now%", String.valueOf(Math.min(temProgress.getNow(), section.getInt("progress"))))
+                            .replace("%me%", String.valueOf(Math.max(temProgress.getPlayerProgress(player.getName()), 0))));
                 }
                 lore.replaceAll((s) -> ChatColor.translateAlternateColorCodes('&', s));
                 meta.setLore(lore);
@@ -105,13 +107,17 @@ public class QuestProgressGui {
                         clicker.sendMessage(ServerQuest.getString("message.received", true));
                         return;
                     }
-                    tempData.add(questData.getKey(), progress);
-                    // 给予奖励
-                    questData.getReward(progress).getCommands().forEach(
-                            (command) -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command
-                                    .replace("%player%", clicker.getName()))
-                    );
-                    clicker.sendMessage(ServerQuest.getString("message.gotten", true));
+                    if (ScriptUtil.detectionCondition(clicker, questData.getReward(progress).getConditions())) {
+                        tempData.add(questData.getKey(), progress);
+                        // 给予奖励
+                        questData.getReward(progress).getCommands().forEach(
+                                (command) -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command
+                                        .replace("%player%", clicker.getName()))
+                        );
+                        clicker.sendMessage(ServerQuest.getString("message.gotten", true));
+                    } else {
+                        clicker.sendMessage(ServerQuest.getString("message.condition_not_met", true));
+                    }
                 }
             }
         });

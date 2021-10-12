@@ -15,10 +15,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * @author Blank038
@@ -46,6 +49,10 @@ public class ServerQuest extends JavaPlugin {
         this.getCommand("sq").setExecutor(new ServerQuestCommand());
         // 启动线程定时存储数据
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveAll, 1200L, 1200L);
+        // 载入在线玩家的数据
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerData.DATA_MAP.put(player.getName(), new PlayerData(player.getName()));
+        }
     }
 
     @Override
@@ -80,7 +87,7 @@ public class ServerQuest extends JavaPlugin {
         // 开始读取数据
         QuestData.QUEST_MAP.clear();
         ProgressData.PROGRESS_MAP.clear();
-        for (File file : progressFile.listFiles()) {
+        for (File file : Objects.requireNonNull(progressFile.listFiles())) {
             String questKey = file.getName().split(".yml")[0];
             ProgressData.PROGRESS_MAP.put(questKey, new ProgressData(questKey, YamlConfiguration.loadConfiguration(file)));
         }
@@ -92,9 +99,9 @@ public class ServerQuest extends JavaPlugin {
 
     public void saveAll() {
         // 写入配置
-        ProgressData.PROGRESS_MAP.forEach((k, v) -> v.save());
+        new HashMap<>(ProgressData.PROGRESS_MAP).forEach((k, v) -> v.save());
         // 存储玩家数据
-        PlayerData.DATA_MAP.forEach((k, v) -> v.save());
+        new HashMap<>(PlayerData.DATA_MAP).forEach((k, v) -> v.save());
     }
 
     public static ServerQuest getInstance() {

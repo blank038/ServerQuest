@@ -5,3 +5,5 @@ example:
     1000:
       commands:
         - "say %player% 领取了全服在线 1000 分钟的奖励."
+      conditions:
+        - "%sq_player_example% >= 30"

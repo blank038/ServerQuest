@@ -13,6 +13,7 @@ message:
   wrong_progress_key: "请输入进度编号."
   progress_n_exists: "进度奖励不存在, 请联系服主检查配置."
   progress_n_reach: "进度还没达标, 无法领取该奖励."
+  condition_not_met: "个人条件不满足, 无法领取."
   gotten: "成功该进度领取奖励."
   received: "你已领取过该进度奖励."
   reload: "插件配置重载完成."
