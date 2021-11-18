@@ -8,7 +8,7 @@ import com.blank038.serverquest.data.QuestData;
 import com.blank038.serverquest.hook.PlaceholderBridge;
 import com.blank038.serverquest.listener.PixelmonListener;
 import com.blank038.serverquest.listener.PlayerListener;
-import com.blank038.serverquest.util.CommonUtil;
+import com.blank038.serverquest.utils.CommonUtil;
 import com.mc9y.blank038api.Blank038API;
 import com.mc9y.pokemonapi.api.enums.EnumPixelmon;
 import org.bukkit.Bukkit;
@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 

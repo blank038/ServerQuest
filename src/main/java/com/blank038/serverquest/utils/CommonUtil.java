@@ -1,4 +1,4 @@
-package com.blank038.serverquest.util;
+package com.blank038.serverquest.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
