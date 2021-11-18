@@ -1,7 +1,7 @@
 # ServerQuest
 ## 介绍
 基于 Bukkit 开发的全服任务系统, 额外扩展 PixelmonReforged 模组。
-![](https://image.mc9y.com/2021/11/18/2dda9348168f3.png)
+![](./files/example.png)
 
 ## 功能
 * 界面的高度自定义性
