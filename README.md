@@ -8,6 +8,9 @@
 * 全服进度要求/个人进度要求
 * JavaScript 语法条件(支持 PlaceholderAPI)
 
+# 更新计划
+- [ ] 支持 MySQL/SQLite 存储数据
+
 ## 问题反馈
 [Github](https://github.com/Blank038/ServerQuest/issues)  
 [Email](mailto:admin@mc9y.com)  
