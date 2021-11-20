@@ -31,16 +31,16 @@ public class PlaceholderBridge extends PlaceholderExpansion {
                 }
             }
             String value = sb.toString();
-            if ("progress".equals(split[0])) {
-                if (ProgressData.PROGRESS_MAP.containsKey(value)) {
+            if (!ProgressData.PROGRESS_MAP.containsKey(value)) {
+                return "0";
+            }
+            switch (split[0]) {
+                case "progress":
                     return String.valueOf(ProgressData.PROGRESS_MAP.get(value).getNow());
-                }
-                return "0";
-            } else if ("player".equals(split[0])) {
-                if (ProgressData.PROGRESS_MAP.containsKey(value)) {
+                case "player":
                     return String.valueOf(ProgressData.PROGRESS_MAP.get(value).getPlayerProgress(p.getName()));
-                }
-                return "0";
+                default:
+                    break;
             }
         }
         return "";
