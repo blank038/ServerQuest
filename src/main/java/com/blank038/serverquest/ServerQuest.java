@@ -2,9 +2,10 @@ package com.blank038.serverquest;
 
 import com.blank038.serverquest.api.ServerQuestApi;
 import com.blank038.serverquest.commands.ServerQuestCommand;
-import com.blank038.serverquest.data.PlayerData;
-import com.blank038.serverquest.data.ProgressData;
-import com.blank038.serverquest.data.QuestData;
+import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
+import com.blank038.serverquest.dto.PlayerData;
+import com.blank038.serverquest.dto.ProgressData;
+import com.blank038.serverquest.dto.QuestData;
 import com.blank038.serverquest.hook.PlaceholderBridge;
 import com.blank038.serverquest.listener.PixelmonListener;
 import com.blank038.serverquest.listener.PlayerListener;
@@ -98,7 +99,9 @@ public class ServerQuest extends JavaPlugin {
 
     public void saveAll() {
         // 写入配置
-        new HashMap<>(ProgressData.PROGRESS_MAP).forEach((k, v) -> v.save());
+        if (AbstractQuestDaoImpl.getInstance() != null) {
+            AbstractQuestDaoImpl.getInstance().save();
+        }
         // 存储玩家数据
         new HashMap<>(PlayerData.DATA_MAP).forEach((k, v) -> v.save());
     }

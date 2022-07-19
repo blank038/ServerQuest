@@ -2,7 +2,7 @@ package com.blank038.serverquest.listener;
 
 import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.api.ServerQuestApi;
-import com.blank038.serverquest.data.PlayerData;
+import com.blank038.serverquest.dto.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

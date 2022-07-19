@@ -1,9 +1,9 @@
 package com.blank038.serverquest.gui;
 
 import com.blank038.serverquest.ServerQuest;
-import com.blank038.serverquest.data.PlayerData;
-import com.blank038.serverquest.data.ProgressData;
-import com.blank038.serverquest.data.QuestData;
+import com.blank038.serverquest.dto.PlayerData;
+import com.blank038.serverquest.dto.ProgressData;
+import com.blank038.serverquest.dto.QuestData;
 import com.blank038.serverquest.utils.CommonUtil;
 import com.blank038.serverquest.utils.ScriptUtil;
 import com.mc9y.blank038api.util.inventory.GuiModel;
@@ -61,7 +61,7 @@ public class QuestProgressGui {
                 List<String> lore = new ArrayList<>();
                 for (String line : section.getStringList("lore")) {
                     lore.add(ChatColor.translateAlternateColorCodes('&', line)
-                            .replace("%now%", String.valueOf(Math.min(temProgress.getNow(), section.getInt("progress"))))
+                            .replace("%now%", String.valueOf(Math.min(temProgress.getCurrentTotalDevote(), section.getInt("progress"))))
                             .replace("%me%", String.valueOf(Math.max(temProgress.getPlayerProgress(player.getName()), 0))));
                 }
                 lore.replaceAll((s) -> ChatColor.translateAlternateColorCodes('&', s));
@@ -98,7 +98,7 @@ public class QuestProgressGui {
                         return;
                     }
                     ProgressData progressData = ProgressData.PROGRESS_MAP.get(questKey);
-                    if (progressData.getNow() < progress) {
+                    if (progressData.getCurrentTotalDevote() < progress) {
                         clicker.sendMessage(ServerQuest.getString("message.progress_n_reach", true));
                         return;
                     }

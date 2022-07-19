@@ -1,7 +1,7 @@
 package com.blank038.serverquest.api;
 
-import com.blank038.serverquest.data.ProgressData;
-import com.blank038.serverquest.data.QuestData;
+import com.blank038.serverquest.dto.ProgressData;
+import com.blank038.serverquest.dto.QuestData;
 import org.bukkit.entity.Player;
 
 /**

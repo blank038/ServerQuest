@@ -1,7 +1,7 @@
 package com.blank038.serverquest.hook;
 
 import com.blank038.serverquest.ServerQuest;
-import com.blank038.serverquest.data.ProgressData;
+import com.blank038.serverquest.dto.ProgressData;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -36,7 +36,7 @@ public class PlaceholderBridge extends PlaceholderExpansion {
             }
             switch (split[0]) {
                 case "progress":
-                    return String.valueOf(ProgressData.PROGRESS_MAP.get(value).getNow());
+                    return String.valueOf(ProgressData.PROGRESS_MAP.get(value).getCurrentTotalDevote());
                 case "player":
                     return String.valueOf(ProgressData.PROGRESS_MAP.get(value).getPlayerProgress(p.getName()));
                 default:
