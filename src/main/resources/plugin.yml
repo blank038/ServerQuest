@@ -1,10 +1,10 @@
 name: ServerQuest
 main: com.blank038.serverquest.ServerQuest
 depend:
-  - PokemonAPI
+  - AyCore
 softdepend:
   - PlaceholderAPI
-version: ${version}
+version: @version@
 commands:
   serverquest:
     aliases:

@@ -8,6 +8,10 @@ import org.bukkit.entity.Player;
  */
 public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
 
+    public MysqlQuestDaoImpl() {
+        // 初始化数据连接接口
+    }
+
     @Override
     public int getQuestProgressByPlayer(Player player, String questId) {
         return 0;
@@ -25,6 +29,6 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
 
     @Override
     public void save() {
-
+        // 这里不需要做什么
     }
 }
