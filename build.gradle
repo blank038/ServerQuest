@@ -35,7 +35,11 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+    implementation("org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT")
+    implementation("org.bukkit:bukkit:1.12.2-R0.1-SNAPSHOT")
     implementation("com.aystudio.core:AyCore:1.0.3-BETA")
+    implementation "me.clip:placeholderapi:2.10.4"
+    implementation(fileTree(dir: "libs", includes: ["*.jar"]))
 }
 
 tasks.withType(JavaCompile) {
