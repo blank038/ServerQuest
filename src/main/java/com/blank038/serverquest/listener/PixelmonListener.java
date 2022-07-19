@@ -1,15 +1,13 @@
 package com.blank038.serverquest.listener;
 
+import com.aystudio.core.forge.event.ForgeEvent;
 import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.api.ServerQuestApi;
-import com.mc9y.pokemonapi.api.event.ForgeEvent;
 import com.pixelmonmod.pixelmon.api.events.BeatWildPixelmonEvent;
 import com.pixelmonmod.pixelmon.api.events.CaptureEvent;
 import com.pixelmonmod.pixelmon.api.events.LevelUpEvent;
 import com.pixelmonmod.pixelmon.api.events.battles.BattleEndEvent;
 import com.pixelmonmod.pixelmon.api.events.raids.EndRaidEvent;
-import com.pixelmonmod.pixelmon.battles.controller.participants.BattleParticipant;
-import com.pixelmonmod.pixelmon.battles.controller.participants.PlayerParticipant;
 import com.pixelmonmod.pixelmon.battles.raids.RaidData;
 import com.pixelmonmod.pixelmon.enums.battle.EnumBattleEndCause;
 import org.bukkit.Bukkit;
@@ -21,11 +19,7 @@ import org.bukkit.event.Listener;
  * @since 2021-10-05
  */
 public class PixelmonListener implements Listener {
-    private final ServerQuest INSTANCE;
-
-    public PixelmonListener() {
-        this.INSTANCE = ServerQuest.getInstance();
-    }
+    private final ServerQuest instance = ServerQuest.getInstance();
 
     @EventHandler
     public void onForge(ForgeEvent event) {

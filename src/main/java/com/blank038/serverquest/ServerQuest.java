@@ -1,5 +1,7 @@
 package com.blank038.serverquest;
 
+import com.aystudio.core.bukkit.AyCore;
+import com.aystudio.core.pixelmon.api.enums.EnumPixelmon;
 import com.blank038.serverquest.api.ServerQuestApi;
 import com.blank038.serverquest.commands.ServerQuestCommand;
 import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
@@ -10,8 +12,6 @@ import com.blank038.serverquest.hook.PlaceholderBridge;
 import com.blank038.serverquest.listener.PixelmonListener;
 import com.blank038.serverquest.listener.PlayerListener;
 import com.blank038.serverquest.utils.CommonUtil;
-import com.mc9y.blank038api.Blank038API;
-import com.mc9y.pokemonapi.api.enums.EnumPixelmon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -38,7 +38,7 @@ public class ServerQuest extends JavaPlugin {
         // 注册普通玩家监听器
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
         // 判断是否存在 Pixelmon 模组
-        if (Blank038API.getPokemonAPI().getEnumPixelmon() == EnumPixelmon.PIXELMON_REFORGED) {
+        if (AyCore.getPokemonAPI().getEnumPixelmon() == EnumPixelmon.PIXELMON_REFORGED) {
             Bukkit.getPluginManager().registerEvents(new PixelmonListener(), this);
         }
         // 判断 PlaceholderAPI 是否挂钩
