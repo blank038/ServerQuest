@@ -1,8 +1,10 @@
 package com.blank038.serverquest.model;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Blank038
@@ -11,12 +13,13 @@ import java.util.HashMap;
 public class QuestData {
     public static final HashMap<String, QuestData> QUEST_MAP = new HashMap<>();
 
-    private final String QUEST_TYPE, SOURCE_KEY;
-    private final HashMap<Integer, RewardData> REWARDS = new HashMap<>();
+    private final String questType, sourceKey, condition;
+    private final Map<Integer, RewardData> REWARDS = new HashMap<>();
 
     public QuestData(String sourceKey, ConfigurationSection section) {
-        this.QUEST_TYPE = section.getString("type");
-        this.SOURCE_KEY = sourceKey;
+        this.questType = section.getString("type");
+        this.sourceKey = sourceKey;
+        this.condition = ChatColor.translateAlternateColorCodes('&', section.getString("check", "all"));
         section.getConfigurationSection("rewards.").getKeys(false).forEach((key) -> this.REWARDS.put(Integer.parseInt(key),
                 new RewardData(section.getConfigurationSection("rewards." + key))));
     }
@@ -26,11 +29,15 @@ public class QuestData {
     }
 
     public String getType() {
-        return this.QUEST_TYPE;
+        return this.questType;
     }
 
     public String getKey() {
-        return this.SOURCE_KEY;
+        return this.sourceKey;
+    }
+
+    public String getCondition() {
+        return this.condition;
     }
 
     public boolean containsReward(int progress) {

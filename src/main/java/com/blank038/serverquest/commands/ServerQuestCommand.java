@@ -2,6 +2,8 @@ package com.blank038.serverquest.commands;
 
 import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.gui.QuestProgressGui;
+import com.blank038.serverquest.gui.SubmitItemGui;
+import com.blank038.serverquest.model.QuestData;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,6 +33,9 @@ public class ServerQuestCommand implements CommandExecutor {
                 case "reload":
                     this.reload(commandSender);
                     break;
+                case "submit":
+                    this.submitItem(commandSender, strings);
+                    break;
                 default:
                     break;
             }
@@ -48,11 +53,21 @@ public class ServerQuestCommand implements CommandExecutor {
 
     private void open(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
-            if (args.length == 1) {
+            if (args.length == 1 || !QuestData.QUEST_MAP.containsKey(args[1])) {
                 sender.sendMessage(ServerQuest.getString("message.wrong_progress_key", true));
                 return;
             }
             QuestProgressGui.open((Player) sender, args[1]);
+        }
+    }
+
+    private void submitItem(CommandSender sender, String[] args) {
+        if (sender instanceof Player) {
+            if (args.length == 1 || !QuestData.QUEST_MAP.containsKey(args[1])) {
+                sender.sendMessage(ServerQuest.getString("message.wrong_progress_key", true));
+                return;
+            }
+            SubmitItemGui.open((Player) sender, args[1]);
         }
     }
 

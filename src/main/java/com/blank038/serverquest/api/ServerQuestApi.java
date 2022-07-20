@@ -7,6 +7,9 @@ import com.blank038.serverquest.model.QuestData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * @author Blank038
  * @since 2021-10-05
@@ -20,16 +23,22 @@ public class ServerQuestApi {
      * @param type   任务类型
      * @param count  任务进度
      */
-    public static void submitQuest(Player player, String type, int count) {
+    public static boolean submitQuest(Player player, String type, String condition, int count) {
         if (player == null) {
-            return;
+            return false;
         }
-        QuestData.QUEST_MAP.forEach((k, v) -> {
-            if (type.equals(v.getType())) {
+        Iterator<Map.Entry<String, QuestData>> iterator = QuestData.QUEST_MAP.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, QuestData> entry = iterator.next();
+            QuestData questData = entry.getValue();
+            if (type.equals(questData.getType()) && (condition.equalsIgnoreCase("all") || questData.getCondition() == null
+                    || questData.getCondition().equalsIgnoreCase("all") || questData.getCondition().equals(condition))) {
                 Bukkit.getScheduler().runTaskAsynchronously(ServerQuest.getInstance(),
-                        () -> AbstractQuestDaoImpl.getInstance().addQuestProgress(player, k, count));
+                        () -> AbstractQuestDaoImpl.getInstance().addQuestProgress(player, entry.getKey(), count));
+                return true;
             }
-        });
+        }
+        return true;
     }
 
     /**

@@ -11,6 +11,8 @@
 
 ## 任务类型
 * ONLINE = 在线时长
+* SUBMIT_ITEM = 提交物品(/sq submit <任务>)
+* KILL_ENTITY = 击杀实体
 * BEAT_WILD_PIXELMON = 击败野外精灵(PixelmonReforged)
 * PLAYER_BATTLE = 玩家与玩家对战结束(PixelmonReforged)
 * NORMAL_CAPTURE = 玩家捕捉精灵, 普通捕捉(PixelmonReforged)
@@ -19,7 +21,7 @@
 * LEVEL_UP = 玩家精灵升级(PixelmonReforged)
 
 ## 更新计划
-- [ ] 支持 MySQL/SQLite 存储数据
+- [x] 支持 MySQL/SQLite 存储数据
 
 ## 问题反馈
 [GitHub](https://github.com/Blank038/ServerQuest/issues)  

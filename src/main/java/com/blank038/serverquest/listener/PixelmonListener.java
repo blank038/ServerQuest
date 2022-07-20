@@ -25,20 +25,20 @@ public class PixelmonListener implements Listener {
     public void onForge(ForgeEvent event) {
         if (event.getForgeEvent() instanceof BeatWildPixelmonEvent) {
             BeatWildPixelmonEvent e = (BeatWildPixelmonEvent) event.getForgeEvent();
-            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUniqueID()), "BEAT_WILD_PIXELMON", 1);
+            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUniqueID()), e.wpp.allPokemon[0].pokemon.getSpecies().name(), "BEAT_WILD_PIXELMON", 1);
         } else if (event.getForgeEvent() instanceof BattleEndEvent) {
             BattleEndEvent e = (BattleEndEvent) event.getForgeEvent();
             if (e.getPlayers().size() >= 2 && e.cause == EnumBattleEndCause.NORMAL) {
                 e.getPlayers().forEach((player) -> {
-                    ServerQuestApi.submitQuest(Bukkit.getPlayer(player.getUniqueID()), "PLAYER_BATTLE", 1);
+                    ServerQuestApi.submitQuest(Bukkit.getPlayer(player.getUniqueID()), "all", "PLAYER_BATTLE", 1);
                 });
             }
         } else if (event.getForgeEvent() instanceof CaptureEvent.SuccessfulCapture) {
             CaptureEvent.SuccessfulCapture e = (CaptureEvent.SuccessfulCapture) event.getForgeEvent();
-            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUniqueID()), "NORMAL_CAPTURE", 1);
+            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUniqueID()), "NORMAL_CAPTURE", e.getPokemon().getSpecies().name(), 1);
         } else if (event.getForgeEvent() instanceof CaptureEvent.SuccessfulRaidCapture) {
             CaptureEvent.SuccessfulRaidCapture e = (CaptureEvent.SuccessfulRaidCapture) event.getForgeEvent();
-            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUniqueID()), "RAID_CAPTURE", 1);
+            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUniqueID()), "RAID_CAPTURE", e.getPokemon().getSpecies().name(), 1);
         } else if (event.getForgeEvent() instanceof EndRaidEvent) {
             EndRaidEvent e = (EndRaidEvent) event.getForgeEvent();
             if (e.didRaidersWin()) {
@@ -46,12 +46,12 @@ public class PixelmonListener implements Listener {
                     if (player == null || player.player == null) {
                         continue;
                     }
-                    ServerQuestApi.submitQuest(Bukkit.getPlayer(player.player), "RAID_WIN", e.getRaid().getStars());
+                    ServerQuestApi.submitQuest(Bukkit.getPlayer(player.player), "RAID_WIN", String.valueOf(e.getRaid().getStars()), e.getRaid().getStars());
                 }
             }
         } else if (event.getForgeEvent() instanceof LevelUpEvent) {
             LevelUpEvent e = (LevelUpEvent) event.getForgeEvent();
-            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUniqueID()), "LEVEL_UP", Math.max(1, e.newLevel - e.pokemon.getLevel()));
+            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUniqueID()), "LEVEL_UP", e.pokemon.getSpecies().name(), Math.max(1, e.newLevel - e.pokemon.getLevel()));
         }
     }
 }

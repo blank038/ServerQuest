@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -25,7 +26,7 @@ public class PlayerListener implements Listener {
         // 提交玩家在线状态
         Bukkit.getScheduler().runTaskTimerAsynchronously(this.instance, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                ServerQuestApi.submitQuest(player, "ONLINE", 1);
+                ServerQuestApi.submitQuest(player, "ONLINE", "all", 1);
             }
         }, 1200L, 1200L);
     }
@@ -65,6 +66,14 @@ public class PlayerListener implements Listener {
         PlayerData data = PlayerData.DATA_MAP.remove(event.getPlayer().getName());
         if (data != null) {
             Bukkit.getScheduler().runTaskAsynchronously(this.instance, () -> AbstractQuestDaoImpl.getInstance().savePlayerData(data, false));
+        }
+    }
+
+    @EventHandler
+    public void onPlayerKillEntity(EntityDeathEvent event) {
+        if (event.getEntity().getKiller() != null && PlayerData.DATA_MAP.containsKey(event.getEntity().getKiller().getName())) {
+            String entityName = event.getEntity().getCustomName() != null ? event.getEntity().getCustomName() : event.getEntity().getType().name();
+            ServerQuestApi.submitQuest(event.getEntity().getKiller(), "KILL_ENTITY", entityName, 1);
         }
     }
 
