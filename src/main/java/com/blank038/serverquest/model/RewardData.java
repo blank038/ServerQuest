@@ -1,4 +1,4 @@
-package com.blank038.serverquest.dto;
+package com.blank038.serverquest.model;
 
 import org.bukkit.configuration.ConfigurationSection;
 

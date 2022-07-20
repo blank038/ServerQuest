@@ -19,7 +19,7 @@
 * LEVEL_UP = 玩家精灵升级(PixelmonReforged)
 
 ## 更新计划
-- [x] 支持 MySQL/SQLite 存储数据
+- [ ] 支持 MySQL/SQLite 存储数据
 
 ## 问题反馈
 [GitHub](https://github.com/Blank038/ServerQuest/issues)  

@@ -1,12 +1,13 @@
 package com.blank038.serverquest.gui;
 
+import com.aystudio.core.bukkit.util.inventory.GuiModel;
 import com.blank038.serverquest.ServerQuest;
-import com.blank038.serverquest.dto.PlayerData;
-import com.blank038.serverquest.dto.ProgressData;
-import com.blank038.serverquest.dto.QuestData;
+import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
+import com.blank038.serverquest.model.PlayerData;
+import com.blank038.serverquest.model.ProgressData;
+import com.blank038.serverquest.model.QuestData;
 import com.blank038.serverquest.utils.CommonUtil;
 import com.blank038.serverquest.utils.ScriptUtil;
-import com.mc9y.blank038api.util.inventory.GuiModel;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,6 +53,7 @@ public class QuestProgressGui {
         model.registerListener(ServerQuest.getInstance());
         model.setCloseRemove(true);
         if (data.contains("items")) {
+            String meDevote = String.valueOf(AbstractQuestDaoImpl.getInstance().getQuestProgressCacheByPlayer(player, questKey));
             for (String key : data.getConfigurationSection("items").getKeys(false)) {
                 ConfigurationSection section = data.getConfigurationSection("items." + key);
                 ItemStack itemStack = new ItemStack(Material.valueOf(section.getString("type")),
@@ -62,7 +64,7 @@ public class QuestProgressGui {
                 for (String line : section.getStringList("lore")) {
                     lore.add(ChatColor.translateAlternateColorCodes('&', line)
                             .replace("%now%", String.valueOf(Math.min(temProgress.getCurrentTotalDevote(), section.getInt("progress"))))
-                            .replace("%me%", String.valueOf(Math.max(temProgress.getPlayerProgress(player.getName()), 0))));
+                            .replace("%me%", meDevote));
                 }
                 lore.replaceAll((s) -> ChatColor.translateAlternateColorCodes('&', s));
                 meta.setLore(lore);

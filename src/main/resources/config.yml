@@ -1,6 +1,20 @@
+# 存储设定
+data-option:
+  # 存储数据类型, 目前支持: Mysql, Yaml, SQLite
+  type: yaml
+  # MySQL的URL，例如jdbc:mysql://127.0.0.1/minecraft 格式：jdbc:mysql://MySQL地址/数据库名
+  url: jdbc:mysql://localhost/minecraft
+  # 数据库用户名
+  user: "root"
+  # 数据库密码
+  password: "root"
+  # 数据库读取超时打开数据锁时长, 2 = 1秒
+  time-out: 120
+  # 同步提示
+  pull-notify: true
 # 提示文本
 message:
-  prefix: "&a任务 &f"
+  prefix: "&a全服任务 &f"
   help:
     default:
       - "&3全服任务"
@@ -16,4 +30,6 @@ message:
   condition_not_met: "个人条件不满足, 无法领取."
   gotten: "成功该进度领取奖励."
   received: "你已领取过该进度奖励."
+  pull-start: "正在同步你的全服任务数据, 请等待."
+  pull-end: "全服任务数据已同步完成."
   reload: "插件配置重载完成."

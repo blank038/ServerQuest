@@ -1,7 +1,9 @@
 package com.blank038.serverquest.hook;
 
 import com.blank038.serverquest.ServerQuest;
-import com.blank038.serverquest.dto.ProgressData;
+import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
+import com.blank038.serverquest.model.PlayerData;
+import com.blank038.serverquest.model.ProgressData;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -22,6 +24,9 @@ public class PlaceholderBridge extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player p, String params) {
+        if (!PlayerData.DATA_MAP.containsKey(p.getName())) {
+            return "0";
+        }
         if (params.contains("_")) {
             String[] split = params.split("_");
             StringBuilder sb = new StringBuilder(split[1]);
@@ -38,7 +43,7 @@ public class PlaceholderBridge extends PlaceholderExpansion {
                 case "progress":
                     return String.valueOf(ProgressData.PROGRESS_MAP.get(value).getCurrentTotalDevote());
                 case "player":
-                    return String.valueOf(ProgressData.PROGRESS_MAP.get(value).getPlayerProgress(p.getName()));
+                    return String.valueOf(AbstractQuestDaoImpl.getInstance().getQuestProgressCacheByPlayer(p, value));
                 default:
                     break;
             }

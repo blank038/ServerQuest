@@ -1,7 +1,10 @@
 package com.blank038.serverquest.api;
 
-import com.blank038.serverquest.dto.ProgressData;
-import com.blank038.serverquest.dto.QuestData;
+import com.blank038.serverquest.ServerQuest;
+import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
+import com.blank038.serverquest.model.ProgressData;
+import com.blank038.serverquest.model.QuestData;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -23,13 +26,8 @@ public class ServerQuestApi {
         }
         QuestData.QUEST_MAP.forEach((k, v) -> {
             if (type.equals(v.getType())) {
-                if (ProgressData.PROGRESS_MAP.containsKey(k)) {
-                    ProgressData.PROGRESS_MAP.get(k).add(player, count);
-                } else {
-                    ProgressData data = new ProgressData(k, 0);
-                    data.add(player, count);
-                    ProgressData.PROGRESS_MAP.put(k, data);
-                }
+                Bukkit.getScheduler().runTaskAsynchronously(ServerQuest.getInstance(),
+                        () -> AbstractQuestDaoImpl.getInstance().addQuestProgress(player, k, count));
             }
         });
     }

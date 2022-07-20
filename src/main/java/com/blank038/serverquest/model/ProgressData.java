@@ -1,8 +1,6 @@
-package com.blank038.serverquest.dto;
+package com.blank038.serverquest.model;
 
-import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,10 +35,6 @@ public class ProgressData {
         this.devoteMap.putAll(devoteMap);
     }
 
-    public void add(Player player, int count) {
-        AbstractQuestDaoImpl.getInstance().addQuestProgress(player, this.getProgressKey(), count);
-    }
-
     public boolean hasPlayer(String playerName) {
         return this.devoteMap.containsKey(playerName);
     }
@@ -55,10 +49,6 @@ public class ProgressData {
 
     public int getCurrentTotalDevote() {
         return this.now;
-    }
-
-    public int getPlayerProgress(String player) {
-        return this.devoteMap.getOrDefault(player, 0);
     }
 
     public void addCurrentTotalDevote(int count) {

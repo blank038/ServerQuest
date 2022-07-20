@@ -1,8 +1,11 @@
 package com.blank038.serverquest.listener;
 
+import com.aystudio.core.bukkit.thread.BlankThread;
+import com.aystudio.core.bukkit.thread.ThreadProcessor;
 import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.api.ServerQuestApi;
-import com.blank038.serverquest.dto.PlayerData;
+import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
+import com.blank038.serverquest.model.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,12 +18,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * @since 2021-10-05
  */
 public class PlayerListener implements Listener {
-    private final ServerQuest INSTANCE;
+    private final ServerQuest instance = ServerQuest.getInstance();
+    ;
 
     public PlayerListener() {
-        this.INSTANCE = ServerQuest.getInstance();
         // 提交玩家在线状态
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this.INSTANCE, () -> {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this.instance, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 ServerQuestApi.submitQuest(player, "ONLINE", 1);
             }
@@ -29,14 +32,48 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        PlayerData.DATA_MAP.put(event.getPlayer().getName(), new PlayerData(event.getPlayer().getName()));
+        if (this.instance.getConfig().getBoolean("data-option.pull-notify")) {
+            event.getPlayer().sendMessage(ServerQuest.getString("message.pull-start", true));
+        }
+        // 创建线程
+        ThreadProcessor.crateTask(this.instance, new BlankThread(10) {
+            private int count;
+
+            @Override
+            public void run() {
+                Player player = event.getPlayer();
+                if (player == null || !player.isOnline()) {
+                    this.cancel();
+                    return;
+                }
+                if (!AbstractQuestDaoImpl.getInstance().isLocked(player)) {
+                    PlayerListener.this.loadData(player);
+                    this.cancel();
+                } else {
+                    count++;
+                    if (count > PlayerListener.this.instance.getConfig().getInt("data-option.time-out")) {
+                        PlayerListener.this.loadData(player);
+                        this.cancel();
+                    }
+                }
+            }
+        });
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        PlayerData data = PlayerData.DATA_MAP.get(event.getPlayer().getName());
+        PlayerData data = PlayerData.DATA_MAP.remove(event.getPlayer().getName());
         if (data != null) {
-            data.save();
+            Bukkit.getScheduler().runTaskAsynchronously(this.instance, () -> AbstractQuestDaoImpl.getInstance().savePlayerData(data, false));
+        }
+    }
+
+    private void loadData(Player player) {
+        PlayerData playerData = AbstractQuestDaoImpl.getInstance().getPlayerData(player.getName());
+        PlayerData.DATA_MAP.put(player.getName(), playerData);
+        AbstractQuestDaoImpl.getInstance().setLocked(player, true);
+        if (instance.getConfig().getBoolean("data-option.pull-notify")) {
+            player.sendMessage(ServerQuest.getString("message.pull-end", true));
         }
     }
 }
