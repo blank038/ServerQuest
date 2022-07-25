@@ -38,7 +38,7 @@ public class ServerQuestApi {
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     /**

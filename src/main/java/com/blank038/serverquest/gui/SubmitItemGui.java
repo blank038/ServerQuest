@@ -56,12 +56,12 @@ public class SubmitItemGui {
                     e.setCancelled(true);
                 });
                 model.setCloseInterface((e) -> {
-                    ItemStack itemStack = e.getInventory().getItem(data.getInt("item-slot"));
+                    ItemStack itemStack = e.getInventory().getItem(data.getInt("item-slot")).clone();
                     if (itemStack == null || itemStack.getType() == Material.AIR) {
                         return;
                     }
+                    Player target = (Player) e.getPlayer();
                     if (QuestData.QUEST_MAP.containsKey(questId)) {
-                        Player target = (Player) e.getPlayer();
                         String name = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ?
                                 itemStack.getItemMeta().getDisplayName() : itemStack.getType().name();
                         if (ServerQuestApi.submitQuest(target, "SUBMIT_ITEM", name, itemStack.getAmount())) {
@@ -70,12 +70,11 @@ public class SubmitItemGui {
                                     .replace("%item%", name).replace("%amount%", String.valueOf(itemStack.getAmount())));
                         } else {
                             e.getInventory().setItem(data.getInt("item-slot"), null);
-                            e.getInventory().addItem(itemStack);
+                            target.getInventory().addItem(itemStack);
                         }
-
                     } else {
                         e.getInventory().setItem(data.getInt("item-slot"), null);
-                        e.getInventory().addItem(itemStack);
+                        target.getInventory().addItem(itemStack);
                     }
                 });
                 model.openInventory(player);

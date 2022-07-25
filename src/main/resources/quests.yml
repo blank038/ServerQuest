@@ -7,5 +7,5 @@ example:
         - "say %player% 领取了全服在线 1000 分钟的奖励."
       conditions:
         - "%sq_player_example% >= 30"
-      # 附加条件检测, 例如: 击杀怪物事件可以写入怪物名, all 为任意匹配
-      check: "all"
+  # 附加条件检测, 例如: 击杀怪物事件可以写入怪物名, all 为任意匹配
+  check: "all"
