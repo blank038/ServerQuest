@@ -56,10 +56,11 @@ public class SubmitItemGui {
                     e.setCancelled(true);
                 });
                 model.setCloseInterface((e) -> {
-                    ItemStack itemStack = e.getInventory().getItem(data.getInt("item-slot")).clone();
+                    ItemStack itemStack = e.getInventory().getItem(data.getInt("item-slot"));
                     if (itemStack == null || itemStack.getType() == Material.AIR) {
                         return;
                     }
+                    itemStack = itemStack.clone();
                     Player target = (Player) e.getPlayer();
                     if (QuestData.QUEST_MAP.containsKey(questId)) {
                         String name = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ?
