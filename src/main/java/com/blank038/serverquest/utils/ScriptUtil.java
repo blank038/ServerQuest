@@ -32,7 +32,7 @@ public class ScriptUtil {
                 }
             }
             String script = PlaceholderBridge.getInstance() == null ? stringBuilder.toString() :
-                    PlaceholderBridge.getInstance().setPlaceholders(player, stringBuilder.toString());
+                    PlaceholderBridge.setPlaceholders(player, stringBuilder.toString());
             return (boolean) SCRIPT_ENGINE.eval(script);
         } catch (Exception e) {
             ServerQuest.getInstance().getLogger().log(Level.WARNING, "条件判断出现异常 " + e.getLocalizedMessage());

@@ -4,8 +4,9 @@ import com.aystudio.core.bukkit.thread.BlankThread;
 import com.aystudio.core.bukkit.thread.ThreadProcessor;
 import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.api.ServerQuestApi;
+import com.blank038.serverquest.cacheframework.DataContainer;
 import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
-import com.blank038.serverquest.model.PlayerData;
+import com.blank038.serverquest.cacheframework.cache.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -67,6 +68,7 @@ public class PlayerListener implements Listener {
         if (data != null) {
             Bukkit.getScheduler().runTaskAsynchronously(this.instance, () -> AbstractQuestDaoImpl.getInstance().savePlayerData(data, false));
         }
+        DataContainer.ACTION_COOLDOWN.remove(event.getPlayer().getName());
     }
 
     @EventHandler

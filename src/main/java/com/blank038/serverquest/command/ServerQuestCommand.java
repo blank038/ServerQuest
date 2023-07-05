@@ -1,9 +1,10 @@
-package com.blank038.serverquest.commands;
+package com.blank038.serverquest.command;
 
 import com.blank038.serverquest.ServerQuest;
+import com.blank038.serverquest.cacheframework.DataContainer;
 import com.blank038.serverquest.gui.QuestProgressGui;
 import com.blank038.serverquest.gui.SubmitItemGui;
-import com.blank038.serverquest.model.QuestData;
+import com.blank038.serverquest.cacheframework.cache.QuestData;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -53,7 +54,7 @@ public class ServerQuestCommand implements CommandExecutor {
 
     private void open(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
-            if (args.length == 1 || !QuestData.QUEST_MAP.containsKey(args[1])) {
+            if (args.length == 1 || !DataContainer.QUEST_MAP.containsKey(args[1])) {
                 sender.sendMessage(ServerQuest.getString("message.wrong_progress_key", true));
                 return;
             }
@@ -63,7 +64,7 @@ public class ServerQuestCommand implements CommandExecutor {
 
     private void submitItem(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
-            if (args.length == 1 || !QuestData.QUEST_MAP.containsKey(args[1])) {
+            if (args.length == 1 || !DataContainer.QUEST_MAP.containsKey(args[1])) {
                 sender.sendMessage(ServerQuest.getString("message.wrong_progress_key", true));
                 return;
             }

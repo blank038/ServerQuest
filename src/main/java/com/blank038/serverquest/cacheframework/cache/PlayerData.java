@@ -1,4 +1,4 @@
-package com.blank038.serverquest.model;
+package com.blank038.serverquest.cacheframework.cache;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

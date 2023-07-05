@@ -1,6 +1,6 @@
 package com.blank038.serverquest.dao;
 
-import com.blank038.serverquest.model.PlayerData;
+import com.blank038.serverquest.cacheframework.cache.PlayerData;
 import org.bukkit.entity.Player;
 
 /**

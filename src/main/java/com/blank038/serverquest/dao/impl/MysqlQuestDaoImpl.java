@@ -3,11 +3,12 @@ package com.blank038.serverquest.dao.impl;
 import com.aystudio.core.bukkit.util.mysql.MySqlStorageHandler;
 import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.api.ServerQuestApi;
-import com.blank038.serverquest.cache.DataCache;
+import com.blank038.serverquest.cacheframework.DataContainer;
+import com.blank038.serverquest.cacheframework.cache.DataCache;
 import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
-import com.blank038.serverquest.model.PlayerData;
-import com.blank038.serverquest.model.ProgressData;
-import com.blank038.serverquest.model.QuestData;
+import com.blank038.serverquest.cacheframework.cache.PlayerData;
+import com.blank038.serverquest.cacheframework.cache.ProgressData;
+import com.blank038.serverquest.cacheframework.cache.QuestData;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -71,8 +72,8 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
 
     @Override
     public int getQuestProgressCacheByPlayer(Player player, String questId) {
-        if (DataCache.CACHE_MAP.containsKey(questId)) {
-            return DataCache.CACHE_MAP.get(questId).getPlayerDevote(player.getName());
+        if (DataContainer.CACHE_MAP.containsKey(questId)) {
+            return DataContainer.CACHE_MAP.get(questId).getPlayerDevote(player.getName());
         }
         return 0;
     }
@@ -102,8 +103,18 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
         if (trigger == null || questId == null || count <= 0) {
             return;
         }
-        int currentCount = this.getQuestProgressByPlayer(trigger, questId);
-        if (currentCount == 0) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        this.storageHandler.connect((statement) -> {
+            try {
+                statement.setInt(1, count);
+                statement.setString(2, trigger.getName());
+                statement.setString(3, questId);
+                atomicInteger.set(statement.executeUpdate());
+            } catch (SQLException e) {
+                ServerQuest.getInstance().getLogger().info(e.toString());
+            }
+        }, "UPDATE server_quest_records SET value=value + ? WHERE player=? and quest_id=?");
+        if (atomicInteger.get() == 0) {
             this.storageHandler.connect((statement) -> {
                 try {
                     statement.setString(1, trigger.getName());
@@ -114,17 +125,6 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
                     ServerQuest.getInstance().getLogger().info(e.toString());
                 }
             }, "INSERT INTO server_quest_records(player,quest_id,value) VALUES(?,?,?)");
-        } else {
-            this.storageHandler.connect((statement) -> {
-                try {
-                    statement.setInt(1, currentCount + count);
-                    statement.setString(2, trigger.getName());
-                    statement.setString(3, questId);
-                    statement.executeUpdate();
-                } catch (SQLException e) {
-                    ServerQuest.getInstance().getLogger().info(e.toString());
-                }
-            }, "UPDATE server_quest_records SET value=? WHERE player=? and quest_id=?");
         }
     }
 
@@ -136,15 +136,15 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
     @Override
     public void load() {
         ProgressData.PROGRESS_MAP.clear();
-        DataCache.CACHE_MAP.clear();
+        DataContainer.CACHE_MAP.clear();
         // 读取全服进度
-        for (Map.Entry<String, QuestData> entry : QuestData.QUEST_MAP.entrySet()) {
+        for (Map.Entry<String, QuestData> entry : DataContainer.QUEST_MAP.entrySet()) {
             ServerQuestApi.createProgress(entry.getKey(), this.getQuestProgressTotal(entry.getKey()));
             // 载入缓存, 仅在线玩家的缓存
-            DataCache.CACHE_MAP.put(entry.getKey(), new DataCache());
+            DataContainer.CACHE_MAP.put(entry.getKey(), new DataCache());
             Map<String, Integer> values = new HashMap<>();
             Bukkit.getOnlinePlayers().forEach((player) -> values.put(player.getName(), this.getQuestProgressByPlayer(player, entry.getKey())));
-            DataCache.CACHE_MAP.get(entry.getKey()).update(values);
+            DataContainer.CACHE_MAP.get(entry.getKey()).update(values);
         }
     }
 

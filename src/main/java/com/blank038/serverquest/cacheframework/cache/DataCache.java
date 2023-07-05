@@ -1,4 +1,6 @@
-package com.blank038.serverquest.cache;
+package com.blank038.serverquest.cacheframework.cache;
+
+import com.blank038.serverquest.cacheframework.DataContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +9,6 @@ import java.util.Map;
  * @author Blank038
  */
 public class DataCache {
-    public static final Map<String, DataCache> CACHE_MAP = new HashMap<>();
 
     private final Map<String, Integer> devote = new HashMap<>();
 
@@ -21,8 +22,8 @@ public class DataCache {
     }
 
     public static int getPlayerDevote(String questId, String playerName) {
-        if (CACHE_MAP.containsKey(questId)) {
-            return CACHE_MAP.get(questId).getPlayerDevote(playerName);
+        if (DataContainer.CACHE_MAP.containsKey(questId)) {
+            return DataContainer.CACHE_MAP.get(questId).getPlayerDevote(playerName);
         }
         return 0;
     }

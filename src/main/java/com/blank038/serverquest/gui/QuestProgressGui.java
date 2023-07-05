@@ -2,10 +2,11 @@ package com.blank038.serverquest.gui;
 
 import com.aystudio.core.bukkit.util.inventory.GuiModel;
 import com.blank038.serverquest.ServerQuest;
+import com.blank038.serverquest.cacheframework.DataContainer;
 import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
-import com.blank038.serverquest.model.PlayerData;
-import com.blank038.serverquest.model.ProgressData;
-import com.blank038.serverquest.model.QuestData;
+import com.blank038.serverquest.cacheframework.cache.PlayerData;
+import com.blank038.serverquest.cacheframework.cache.ProgressData;
+import com.blank038.serverquest.cacheframework.cache.QuestData;
 import com.blank038.serverquest.utils.CommonUtil;
 import com.blank038.serverquest.utils.ScriptUtil;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
@@ -43,7 +44,7 @@ public class QuestProgressGui {
         }
         FileConfiguration data = YamlConfiguration.loadConfiguration(file);
         String questKey = data.getString("quest_key");
-        if (!QuestData.QUEST_MAP.containsKey(questKey) || !ProgressData.PROGRESS_MAP.containsKey(questKey)) {
+        if (!DataContainer.QUEST_MAP.containsKey(questKey) || !ProgressData.PROGRESS_MAP.containsKey(questKey)) {
             player.sendMessage(ServerQuest.getString("message.progress_n_exists", true));
             return;
         }
@@ -94,7 +95,7 @@ public class QuestProgressGui {
                 if (nbtTagCompound.hasKey("ProgressReward")) {
                     Player clicker = (Player) e.getWhoClicked();
                     int progress = nbtTagCompound.getInt("ProgressReward");
-                    QuestData questData = QuestData.QUEST_MAP.get(questKey);
+                    QuestData questData = DataContainer.QUEST_MAP.get(questKey);
                     if (!questData.containsReward(progress) || !ProgressData.PROGRESS_MAP.containsKey(questKey)) {
                         clicker.sendMessage(ServerQuest.getString("message.progress_n_exists", true));
                         return;

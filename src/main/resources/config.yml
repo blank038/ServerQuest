@@ -36,4 +36,5 @@ message:
   pull-end: "全服任务数据已同步完成."
   submit-item: "成功提交物品(%item%x%amount%)"
   not-match: "物品与条件不匹配."
+  cooldown: "操作冷却中, 请稍后再试."
   reload: "插件配置重载完成."

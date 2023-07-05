@@ -2,8 +2,8 @@ package com.blank038.serverquest.hook;
 
 import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
-import com.blank038.serverquest.model.PlayerData;
-import com.blank038.serverquest.model.ProgressData;
+import com.blank038.serverquest.cacheframework.cache.PlayerData;
+import com.blank038.serverquest.cacheframework.cache.ProgressData;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -66,7 +66,10 @@ public class PlaceholderBridge extends PlaceholderExpansion {
         return this.INSTANCE.getDescription().getVersion();
     }
 
-    public String setPlaceholders(Player player, String str) {
+    public static String setPlaceholders(Player player, String str) {
+        if (instance == null) {
+            return str;
+        }
         return PlaceholderAPI.setPlaceholders(player, str);
     }
 

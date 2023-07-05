@@ -1,7 +1,6 @@
 package com.blank038.serverquest.listener;
 
 import com.aystudio.core.forge.event.ForgeEvent;
-import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.api.ServerQuestApi;
 import com.pixelmonmod.pixelmon.api.events.BeatWildPixelmonEvent;
 import com.pixelmonmod.pixelmon.api.events.CaptureEvent;
@@ -19,7 +18,6 @@ import org.bukkit.event.Listener;
  * @since 2021-10-05
  */
 public class PixelmonListener implements Listener {
-    private final ServerQuest instance = ServerQuest.getInstance();
 
     @EventHandler
     public void onForge(ForgeEvent event) {

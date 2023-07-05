@@ -1,4 +1,4 @@
-package com.blank038.serverquest.model;
+package com.blank038.serverquest.cacheframework.cache;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,8 +11,6 @@ import java.util.Map;
  * @since 2021-10-04
  */
 public class QuestData {
-    public static final HashMap<String, QuestData> QUEST_MAP = new HashMap<>();
-
     private final String questType, sourceKey, condition;
     private final Map<Integer, RewardData> REWARDS = new HashMap<>();
 

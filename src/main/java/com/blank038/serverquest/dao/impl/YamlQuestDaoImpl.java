@@ -1,10 +1,11 @@
 package com.blank038.serverquest.dao.impl;
 
 import com.blank038.serverquest.ServerQuest;
+import com.blank038.serverquest.cacheframework.DataContainer;
 import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
-import com.blank038.serverquest.model.PlayerData;
-import com.blank038.serverquest.model.ProgressData;
-import com.blank038.serverquest.model.QuestData;
+import com.blank038.serverquest.cacheframework.cache.PlayerData;
+import com.blank038.serverquest.cacheframework.cache.ProgressData;
+import com.blank038.serverquest.cacheframework.cache.QuestData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -76,7 +77,7 @@ public class YamlQuestDaoImpl extends AbstractQuestDaoImpl {
     @Override
     public void load() {
         ProgressData.PROGRESS_MAP.clear();
-        for (Map.Entry<String, QuestData> entry : QuestData.QUEST_MAP.entrySet()) {
+        for (Map.Entry<String, QuestData> entry : DataContainer.QUEST_MAP.entrySet()) {
             File progressFile = new File(ServerQuest.getInstance().getDataFolder() + "/progress/", entry.getKey() + ".yml");
             ProgressData.PROGRESS_MAP.put(entry.getKey(), new ProgressData(entry.getKey(), YamlConfiguration.loadConfiguration(progressFile)));
         }

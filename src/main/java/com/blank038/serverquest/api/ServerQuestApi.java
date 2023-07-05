@@ -1,9 +1,10 @@
 package com.blank038.serverquest.api;
 
 import com.blank038.serverquest.ServerQuest;
+import com.blank038.serverquest.cacheframework.DataContainer;
 import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
-import com.blank038.serverquest.model.ProgressData;
-import com.blank038.serverquest.model.QuestData;
+import com.blank038.serverquest.cacheframework.cache.ProgressData;
+import com.blank038.serverquest.cacheframework.cache.QuestData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -27,7 +28,7 @@ public class ServerQuestApi {
         if (player == null) {
             return false;
         }
-        Iterator<Map.Entry<String, QuestData>> iterator = QuestData.QUEST_MAP.entrySet().iterator();
+        Iterator<Map.Entry<String, QuestData>> iterator = DataContainer.QUEST_MAP.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, QuestData> entry = iterator.next();
             QuestData questData = entry.getValue();

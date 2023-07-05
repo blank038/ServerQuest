@@ -3,26 +3,19 @@ package com.blank038.serverquest;
 import com.aystudio.core.bukkit.AyCore;
 import com.aystudio.core.bukkit.plugin.AyPlugin;
 import com.aystudio.core.pixelmon.api.enums.EnumPixelmon;
-import com.blank038.serverquest.api.ServerQuestApi;
-import com.blank038.serverquest.commands.ServerQuestCommand;
+import com.blank038.serverquest.cacheframework.DataContainer;
+import com.blank038.serverquest.command.ServerQuestCommand;
 import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
 import com.blank038.serverquest.dao.impl.MysqlQuestDaoImpl;
 import com.blank038.serverquest.dao.impl.YamlQuestDaoImpl;
-import com.blank038.serverquest.model.PlayerData;
-import com.blank038.serverquest.model.QuestData;
+import com.blank038.serverquest.cacheframework.cache.PlayerData;
 import com.blank038.serverquest.hook.PlaceholderBridge;
 import com.blank038.serverquest.listener.PixelmonListener;
 import com.blank038.serverquest.listener.PlayerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Blank038
@@ -49,7 +42,7 @@ public class ServerQuest extends AyPlugin {
         // 注册命令
         this.getCommand("sq").setExecutor(new ServerQuestCommand());
         // 启动线程定时存储数据
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveAll, 1200L, 1200L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, DataContainer::saveAll, 1200L, 1200L);
         // 载入在线玩家的数据
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerData.DATA_MAP.put(player.getName(), AbstractQuestDaoImpl.getInstance().getPlayerData(player.getName()));
@@ -59,7 +52,7 @@ public class ServerQuest extends AyPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
-        this.saveAll();
+        DataContainer.saveAll();
     }
 
     public void loadConfig() {
@@ -78,50 +71,20 @@ public class ServerQuest extends AyPlugin {
                     break;
             }
         }
-        // 读取进度
-        File progressFile = new File(this.getDataFolder(), "progress");
-        if (!progressFile.exists()) {
-            progressFile.mkdir();
-        }
-        // 存储进度
-        this.saveAll();
-        new File(this.getDataFolder(), "data").mkdir();
-        // 判断 Gui 文件是否存在
-        this.saveResource("gui/example.yml", "gui/example.yml");
-        // 读取任务
-        File questFile = new File(this.getDataFolder(), "quests.yml");
-        if (!questFile.exists()) {
-            this.saveResource("quests.yml", true);
-        }
-        FileConfiguration questData = YamlConfiguration.loadConfiguration(questFile);
-        // 开始读取数据
-        QuestData.QUEST_MAP.clear();
-        for (String key : questData.getKeys(false)) {
-            QuestData.QUEST_MAP.put(key, new QuestData(key, questData.getConfigurationSection(key)));
-            ServerQuestApi.createProgress(key, 0);
-        }
+        DataContainer.initialize(this);
+        DataContainer.saveAll();
         AbstractQuestDaoImpl.getInstance().load();
     }
 
-    public void saveAll() {
-        // 写入配置
-        if (AbstractQuestDaoImpl.getInstance() != null) {
-            AbstractQuestDaoImpl.getInstance().saveAll();
+    public static String getString(String key, boolean... prefix) {
+        String message = instance.getConfig().getString(key, "");
+        if (prefix.length > 0 && prefix[0]) {
+            message = instance.getConfig().getString("message.prefix") + message;
         }
-        // 存储玩家数据
-        Iterator<Map.Entry<String, PlayerData>> iterator = PlayerData.DATA_MAP.entrySet().iterator();
-        while (iterator.hasNext()) {
-            AbstractQuestDaoImpl.getInstance().savePlayerData(iterator.next().getValue(), true);
-        }
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     public static ServerQuest getInstance() {
         return instance;
-    }
-
-    public static String getString(String key, boolean... prefix) {
-        return ChatColor.translateAlternateColorCodes('&',
-                (prefix.length > 0 && prefix[0] ? instance.getConfig().getString("message.prefix") : "")
-                        + instance.getConfig().getString(key, ""));
     }
 }
