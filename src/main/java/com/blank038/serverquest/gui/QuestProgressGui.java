@@ -7,6 +7,7 @@ import com.blank038.serverquest.dao.AbstractQuestDaoImpl;
 import com.blank038.serverquest.cacheframework.cache.PlayerData;
 import com.blank038.serverquest.cacheframework.cache.ProgressData;
 import com.blank038.serverquest.cacheframework.cache.QuestData;
+import com.blank038.serverquest.hook.PlaceholderBridge;
 import com.blank038.serverquest.utils.CommonUtil;
 import com.blank038.serverquest.utils.ScriptUtil;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
@@ -63,7 +64,7 @@ public class QuestProgressGui {
                 meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', section.getString("name")));
                 List<String> lore = new ArrayList<>();
                 for (String line : section.getStringList("lore")) {
-                    lore.add(ChatColor.translateAlternateColorCodes('&', line)
+                    lore.add(ChatColor.translateAlternateColorCodes('&', PlaceholderBridge.setPlaceholders(player, line))
                             .replace("%now%", String.valueOf(Math.min(temProgress.getCurrentTotalDevote(), section.getInt("progress"))))
                             .replace("%me%", meDevote));
                 }
