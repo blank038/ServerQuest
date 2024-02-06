@@ -6,7 +6,6 @@ import com.blank038.serverquest.ServerQuest;
 import com.blank038.serverquest.api.ServerQuestApi;
 import com.blank038.serverquest.cacheframework.DataContainer;
 import com.blank038.serverquest.cacheframework.cache.PlayerData;
-import com.blank038.serverquest.cacheframework.cache.QuestData;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -75,7 +74,7 @@ public class SubmitItemGui {
                         String key = nbtTagCompound.getString("SubmitItemAction");
                         if ("submit".equals(key)) {
                             Player target = (Player) e.getWhoClicked();
-                            if (DataContainer.ACTION_COOLDOWN.getOrDefault(player.getName(), 0L) <= System.currentTimeMillis()) {
+                            if (DataContainer.ACTION_COOLDOWN.getOrDefault(target.getName(), 0L) >= System.currentTimeMillis()) {
                                 target.sendMessage(ServerQuest.getString("message.cooldown", true));
                                 return;
                             }
@@ -93,7 +92,7 @@ public class SubmitItemGui {
                                 // 扣除物品
                                 e.getInventory().setItem(data.getInt("item-slot"), null);
                                 // 提交数据
-                                if (ServerQuestApi.submitQuest(target, "SUBMIT_ITEM", name, tarItem.getAmount())) {
+                                if (ServerQuestApi.submitItem(target, questId, "SUBMIT_ITEM", name, tarItem.getAmount())) {
                                     target.sendMessage(ServerQuest.getString("message.submit-item", true)
                                             .replace("%item%", name)
                                             .replace("%amount%", String.valueOf(tarItem.getAmount())));
@@ -106,6 +105,13 @@ public class SubmitItemGui {
                             }
                         }
                     }
+                });
+                model.setCloseInterface((e) -> {
+                    ItemStack tarItem = e.getInventory().getItem(data.getInt("item-slot"));
+                    if (tarItem == null || tarItem.getType() == Material.AIR) {
+                        return;
+                    }
+                    e.getPlayer().getInventory().addItem(tarItem);
                 });
                 model.openInventory(player);
             });
