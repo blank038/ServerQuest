@@ -1,0 +1,23 @@
+# 界面标题
+title: "&8请放入要提交的物品(关闭提交)"
+# 界面大小
+size: 27
+# 提交物品的槽位
+item-slot: 10
+# 界面物品
+items:
+  fg:
+    type: STAINED_GLASS_PANE
+    amount: 1
+    data: 15
+    name: "&f"
+    lore: [ ]
+    slot: 0-9,11-15,17-26
+  submit:
+    type: STAINED_GLASS_PANE
+    amount: 1
+    data: 13
+    name: "&a提交物品"
+    lore: [ ]
+    slot: 16
+    action: submit

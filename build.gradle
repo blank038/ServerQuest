@@ -1,57 +1,67 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-buildscript {
-    repositories {
-        maven {
-            name = "AyStudio Repository"
-            url = "https://repo.mc9y.com/snapshots"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
-    }
-}
-apply plugin: 'net.minecraftforge.gradle'
-
-repositories {
-    maven {
-        name = "AyStudio Repository"
-        url = "https://repo.mc9y.com/snapshots"
-    }
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '4.0.2'
 }
 
-version = "1.1.0-SNAPSHOT"
-group = "com.blank038.serverquest"
-archivesBaseName = "ServerQuest"
-
-sourceCompatibility = targetCompatibility = '1.8'
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
-
-minecraft {
-    mappings channel: 'snapshot', version: '20171003-1.12'
+project.ext {
+    ver = "1.1.0-BETA"
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
-    implementation("org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT")
-    implementation("org.bukkit:bukkit:1.12.2-R0.1-SNAPSHOT")
-    implementation("com.aystudio.core:AyCore:1.0.3-BETA")
-    implementation "me.clip:placeholderapi:2.10.4"
-    implementation(fileTree(dir: "libs", includes: ["*.jar"]))
+    implementation project(":common")
+    implementation project(":module:module-pixelmon-1_12")
+    implementation project(":module:module-pixelmon-1_16")
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
+allprojects {
+    apply plugin: 'java'
 
-processResources {
-    setFilteringCharset("UTF-8")
-    expand project.properties
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.yml'
-        filter ReplaceTokens, tokens: ["version": project.property("version")]
-        duplicatesStrategy DuplicatesStrategy.INCLUDE
+    archivesBaseName = "ServerQUest"
+
+    sourceCompatibility = targetCompatibility = '1.8'
+    compileJava {
+        sourceCompatibility = targetCompatibility = '1.8'
     }
+
+    dependencies {
+        compileOnly("org.projectlombok:lombok:1.18.24")
+        annotationProcessor("org.projectlombok:lombok:1.18.24")
+    }
+
+    processResources {
+        from(sourceSets.main.resources.srcDirs) {
+            include '**/*.yml'
+            filter ReplaceTokens, tokens: ["version": project.property("ver")]
+            duplicatesStrategy DuplicatesStrategy.INCLUDE
+        }
+    }
+
+    processResources {
+        setFilteringCharset("UTF-8")
+        expand project.properties
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+}
+
+subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
+
+tasks.register('allJar', Jar) {
+    dependsOn subprojects.tasks["build"]
+    baseName = 'ServerQuest-' + project.property("ver")
+    subprojects.each { subproject ->
+        from subproject.configurations.archives.allArtifacts.files.collect {
+            zipTree(it)
+        }
+    }
+}
+
+tasks.jar.enabled = false
+
+artifacts {
+    archives allJar
 }
