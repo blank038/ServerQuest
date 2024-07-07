@@ -3,9 +3,7 @@ package com.blank038.serverquest.impl.pixelmon.v1_16;
 import com.blank038.serverquest.api.ServerQuestApi;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.battles.BattleEndCause;
-import com.pixelmonmod.pixelmon.api.events.BeatWildPixelmonEvent;
-import com.pixelmonmod.pixelmon.api.events.CaptureEvent;
-import com.pixelmonmod.pixelmon.api.events.LevelUpEvent;
+import com.pixelmonmod.pixelmon.api.events.*;
 import com.pixelmonmod.pixelmon.api.events.battles.BattleEndEvent;
 import com.pixelmonmod.pixelmon.api.events.raids.EndRaidEvent;
 import com.pixelmonmod.pixelmon.battles.raids.RaidData;
@@ -48,6 +46,12 @@ public class PixelmonListener implements Listener {
         Pixelmon.EVENT_BUS.addListener(EventPriority.NORMAL, true, LevelUpEvent.class, (e) -> {
             ServerQuestApi.submitQuest(Bukkit.getPlayer(e.getPlayer().getUUID()), "LEVEL_UP",
                     e.getPokemon().getSpecies().getName(), Math.max(1, e.getAfterLevel() - e.getBeforeLevel()));
+        });
+        Pixelmon.EVENT_BUS.addListener(EventPriority.NORMAL, true, EggHatchEvent.Post.class, (e) -> {
+            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.getPlayer().getUUID()), "HATCH_EGG", e.getPokemon().getSpecies().getName(), 1);
+        });
+        Pixelmon.EVENT_BUS.addListener(EventPriority.NORMAL, true, BeatTrainerEvent.class, (e) -> {
+            ServerQuestApi.submitQuest(Bukkit.getPlayer(e.player.getUUID()), "BEAT_TRAINER", e.trainer.getName().getString(), 1);
         });
     }
 

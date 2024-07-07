@@ -19,7 +19,7 @@ public class ScriptUtil {
     private static final ScriptEngine SCRIPT_ENGINE = new ScriptEngineManager().getEngineByName("JavaScript");
 
     public static boolean detectionCondition(Player player, List<String> conditions) {
-        if (conditions.size() == 0) {
+        if (conditions.isEmpty()) {
             return true;
         }
         try {
