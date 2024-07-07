@@ -39,9 +39,9 @@ public class ServerQuest extends AyPlugin {
         if (AyCore.getPokemonAPI().getEnumPixelmon() == EnumPixelmon.PIXELMON_REFORGED) {
             String version = AyCore.getPokemonAPI().getVersion(EnumPixelmon.PIXELMON_REFORGED);
             String listenerClass = null;
-            if (version.startsWith("9.1")) {
+            if (version.startsWith("8.4")) {
                 listenerClass = "com.blank038.serverquest.impl.pixelmon.v1_12.PixelmonListener";
-            } else if (version.startsWith("9.2")) {
+            } else if (version.startsWith("9.1")) {
                 listenerClass = "com.blank038.serverquest.impl.pixelmon.v1_16.PixelmonListener";
             }
             if (listenerClass != null) {
