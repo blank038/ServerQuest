@@ -78,6 +78,7 @@ public class ServerQuest extends AyPlugin {
     public void loadConfig() {
         this.saveDefaultConfig();
         this.reloadConfig();
+        DataContainer.initialize(this);
         // 初始化数据控制器
         if (AbstractQuestDaoImpl.getInstance() == null) {
             switch (this.getConfig().getString("data-option.type").toLowerCase()) {
@@ -90,9 +91,9 @@ public class ServerQuest extends AyPlugin {
                     new YamlQuestDaoImpl();
                     break;
             }
+        } else {
+            DataContainer.saveAll();
         }
-        DataContainer.initialize(this);
-        DataContainer.saveAll();
         AbstractQuestDaoImpl.getInstance().load();
     }
 
