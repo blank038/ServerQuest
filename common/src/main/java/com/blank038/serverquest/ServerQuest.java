@@ -2,6 +2,7 @@ package com.blank038.serverquest;
 
 import com.aystudio.core.bukkit.AyCore;
 import com.aystudio.core.bukkit.plugin.AyPlugin;
+import com.aystudio.core.pixelmon.PokemonAPI;
 import com.aystudio.core.pixelmon.api.enums.EnumPixelmon;
 import com.blank038.serverquest.cacheframework.DataContainer;
 import com.blank038.serverquest.command.ServerQuestCommand;
@@ -17,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.logging.Level;
 
 
@@ -36,8 +38,9 @@ public class ServerQuest extends AyPlugin {
         // 注册普通玩家监听器
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
         // 判断是否存在 Pixelmon 模组
-        if (AyCore.getPokemonAPI().getEnumPixelmon() == EnumPixelmon.PIXELMON_REFORGED) {
-            String version = AyCore.getPokemonAPI().getVersion(EnumPixelmon.PIXELMON_REFORGED);
+        PokemonAPI pokemonApi = this.getPokemonApi();
+        if (pokemonApi.getEnumPixelmon() == EnumPixelmon.PIXELMON_REFORGED) {
+            String version = pokemonApi.getVersion(EnumPixelmon.PIXELMON_REFORGED);
             String listenerClass = null;
             if (version.startsWith("8.4")) {
                 listenerClass = "com.blank038.serverquest.impl.pixelmon.v1_12.PixelmonListener";
@@ -97,6 +100,15 @@ public class ServerQuest extends AyPlugin {
         AbstractQuestDaoImpl.getInstance().load();
     }
 
+    private PokemonAPI getPokemonApi() {
+        try {
+            Method method = PokemonAPI.class.getMethod("getInstance");
+            return (PokemonAPI) method.invoke(null);
+        } catch (Exception ignore) {
+            return AyCore.getPokemonAPI();
+        }
+    }
+
     public static String getString(String key, boolean... prefix) {
         String message = instance.getConfig().getString(key, "");
         if (prefix.length > 0 && prefix[0]) {
@@ -104,5 +116,4 @@ public class ServerQuest extends AyPlugin {
         }
         return ChatColor.translateAlternateColorCodes('&', message);
     }
-
 }
