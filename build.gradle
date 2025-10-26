@@ -1,5 +1,15 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
+buildscript {
+    repositories {
+        maven {
+            name = "AyStudio-Repository"
+            url = "https://repo.mc9y.com/snapshots"
+        }
+        mavenCentral()
+    }
+}
+
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '4.0.2'

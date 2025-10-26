@@ -13,12 +13,13 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Blank038
  */
 public class DataContainer {
-    public static final Map<String, DataCache> CACHE_MAP = new HashMap<>();
+    public static final Map<String, DataCache> CACHE_MAP = new ConcurrentHashMap<>();
     public static final HashMap<String, QuestData> QUEST_MAP = new HashMap<>();
     public static final Map<String, Long> ACTION_COOLDOWN = new HashMap<>();
 

@@ -21,7 +21,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerListener implements Listener {
     private final ServerQuest instance = ServerQuest.getInstance();
-    ;
 
     public PlayerListener() {
         // 提交玩家在线状态

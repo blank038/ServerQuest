@@ -3,15 +3,16 @@ package com.blank038.serverquest.cacheframework.cache;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Blank038
  * @since 2021-10-04
  */
 public class PlayerData {
-    public static final HashMap<String, PlayerData> DATA_MAP = new HashMap<>();
+    public static final Map<String, PlayerData> DATA_MAP = new ConcurrentHashMap<>();
 
     private final String playerName;
     private final List<String> rewards = new ArrayList<>();
