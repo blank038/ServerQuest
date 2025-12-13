@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
 
 /**
  * @author Blank038
@@ -153,21 +154,15 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
         FileConfiguration object = new YamlConfiguration();
         object.set("rewards", data.getRewards());
         String text = new String(Base64.getEncoder().encode(object.saveToString().getBytes(StandardCharsets.UTF_8)));
-        String sql = String.format(data.isNewData() ? "INSERT INTO server_quest_player_data (user,data,locked) VALUES (?,?,%s)"
-                : "UPDATE server_quest_player_data SET data=?, locked='%s' WHERE user=?", locked ? 0 : 1);
+        String sql = "INSERT INTO server_quest_player_data(user,data,locked) VALUES (?,?,?) ON DUPLICATE KEY UPDATE data=VALUES(data), locked=VALUES(locked);";
         this.storageHandler.connect((statement) -> {
             try {
-                if (data.isNewData()) {
-                    statement.setString(1, data.getOwner());
-                    statement.setString(2, text);
-                    data.setNewData(false);
-                } else {
-                    statement.setString(1, text);
-                    statement.setString(2, data.getOwner());
-                }
+                statement.setString(1, data.getOwner());
+                statement.setString(2, text);
+                statement.setInt(3, locked ? 0 : 1);
                 statement.executeUpdate();
             } catch (SQLException e) {
-                e.printStackTrace();
+                ServerQuest.getInstance().getLogger().log(Level.WARNING, e, () -> "Failed to save player data " + data.getOwner());
             }
         }, sql);
     }
@@ -192,7 +187,7 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
                 }
                 resultSet.close();
             } catch (SQLException | InvalidConfigurationException e) {
-                e.printStackTrace();
+                ServerQuest.getInstance().getLogger().log(Level.WARNING, e, () -> "Failed to load player data " + name);
             }
         }, "SELECT data FROM server_quest_player_data WHERE user=?");
         if (reference.get() == null) {
@@ -219,7 +214,7 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
                 }
                 resultSet.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                ServerQuest.getInstance().getLogger().log(Level.WARNING, e, () -> "Failed to get locked status");
             }
         }, "SELECT locked FROM server_quest_player_data WHERE user=?");
         return result.get();
@@ -233,7 +228,7 @@ public class MysqlQuestDaoImpl extends AbstractQuestDaoImpl {
                 statement.setString(2, player.getName());
                 statement.executeUpdate();
             } catch (SQLException e) {
-                e.printStackTrace();
+                ServerQuest.getInstance().getLogger().log(Level.WARNING, e, () -> "Failed to set locked status");
             }
         }, "UPDATE server_quest_player_data SET locked=? WHERE user=?");
     }
